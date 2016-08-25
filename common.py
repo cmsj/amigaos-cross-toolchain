@@ -362,7 +362,7 @@ def python_setup(name):
 
 
 @recipe('fetch', 1)
-def fetch(name, url):
+def fetch(name, url, commithash=None):
   if url.startswith('http') or url.startswith('ftp'):
     if not path.exists(name):
       download(url, name)
@@ -380,6 +380,9 @@ def fetch(name, url):
     else:
       with cwd(name):
         execute('git', 'pull')
+    if commithash:
+      with cwd(name):
+        execute('git', 'reset', '--hard', commithash)
   elif url.startswith('file'):
     if not path.exists(name):
       _, src = url.split('://')

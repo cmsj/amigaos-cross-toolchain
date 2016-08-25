@@ -13,7 +13,7 @@ import string
 import sys
 
 URLS = \
-  ['git://github.com/FrodeSolheim/python-lhafile',
+  [('git://github.com/FrodeSolheim/python-lhafile', 'python-lhafile', 'afe7919f6d50d8c77c3b0214eab21af2e0217774'),
    'ftp://ftp.gnu.org/gnu/m4/m4-1.4.17.tar.gz',
    'ftp://ftp.gnu.org/gnu/gawk/gawk-3.1.8.tar.gz',
    'ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.13.tar.gz',
@@ -212,11 +212,15 @@ def build():
 
   with cwd('{archives}'):
     for url in URLS:
+      commithash = None
       if type(url) == tuple:
-        url, name = url[0], url[1]
+        try:
+          url, name, commithash = url[0], url[1], url[2]
+        except IndexError:
+          pass
       else:
         name = path.basename(url)
-      fetch(name, url)
+      fetch(name, url, commithash)
 
   add_site_dir('{host}')
 
